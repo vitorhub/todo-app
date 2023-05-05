@@ -3,26 +3,39 @@ import './App.css'
 
 function App() {
 
+  interface Ilist {
+    id?: number;
+    task?: string;
+    checked?: boolean;
+  }
+
   const [night, setNight] = useState(false)
   const [task, setTask] = useState<string>("")
   const [arr, setArr] = useState([])
-  const [list, setList] = useState<string[]>([])
+  const [list, setList] = useState<Ilist>({})
   const [checked, setChecked] = useState<number[]>([])
+  const [boleano , setBoleano] = useState<boolean>(false)
   function toggle() {
     setNight(!night)
   }
 
   function doTask(e: string) {
-    setTask(e)
+    const newTask = {
+      id: Math.random(),
+      task: task,
+      checked: false
+    };
+    setList(  {...list,...newTask }   )
   }
   function handleKeyPress(event: { key: any }) {
     if (event.key === 'Enter' && task !== "") {
-      setList([...list, task]) // para spread array
+
       console.log(list)
     }
   }
-  function sendCheck(par : number){
+  function sendCheck(par : number, e: any){
     setChecked([...checked, par])
+    console.log(e)
   }
 
   return (
@@ -39,12 +52,12 @@ function App() {
       </div>
       <div className="result">
         <ul>
-          {list.map((element, index) => {
+          { Object.keys(list).map((valor, key) => {
             return (
-                <li key={index} draggable={true}>
+                <li key={key} draggable={true}>
                   <label htmlFor="list">
-                    <input type="checkbox" name={element} onClick={()=>sendCheck(index)}/>
-                    <span> {  checked.indexOf(index) !== -1 ? 1 : element } </span>
+                    <input type="checkbox"/>
+                    <span> {  key + " " + valor } </span>
                   </label> 
                 </li>
             )
