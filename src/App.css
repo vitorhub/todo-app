@@ -2,20 +2,20 @@
   background-color: brown;
 }
 .night{
-  background-image: url('../public/images/icon-moon.svg');
+  background-image: url('/images/icon-moon.svg');
   background-color: blueviolet;
   width: 100px;
   height: 100px;
   background-repeat: no-repeat;
   background-size: cover;
-  transition: background-image 5s 1s;
+  transition: background-image 2s 0s;
 }
 .sun{
-  background-image: url('../public/images/icon-sun.svg');
+  background-image: url('/images/icon-sun.svg');
   background-color: blueviolet;
   width: 100px;
   height: 100px;
   background-repeat: no-repeat;
   background-size: cover;
-  transition: background-image 5s 1s;
+  transition: background-image 2s 0s;
 }

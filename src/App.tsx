@@ -2,76 +2,89 @@ import { useContext, useState } from 'react'
 import './App.css'
 
 function App() {
-
-  interface Ilist {
-    id?: number;
-    task?: string;
-    checked?: boolean;
-  }
-
   const [night, setNight] = useState(false)
-  const [task, setTask] = useState<string>("")
-  const [arr, setArr] = useState([])
-  const [list, setList] = useState<Ilist>({})
-  const [checked, setChecked] = useState<number[]>([])
-  const [boleano , setBoleano] = useState<boolean>(false)
   function toggle() {
     setNight(!night)
   }
 
-  function doTask(e: string) {
+  interface IToggleChecked {
+    id: number;
+    checked: boolean;
+  }
+
+  const [task , setTask] = useState("")
+  const [listTask, setListTask] = useState([
+    {
+      id: 1,
+      task: "fazer bolo",
+      checked: true
+    }
+])
+
+  function addTask() {
     const newTask = {
-      id: Math.random(),
-      task: task,
-      checked: false
-    };
-    setList(  {...list,...newTask }   )
+        id: Math.random(),
+        task: task,
+        checked: false
+    }
+    setListTask([...listTask, newTask])
+    setTask("");
   }
   function handleKeyPress(event: { key: any }) {
-    if (event.key === 'Enter' && task !== "") {
-
-      console.log(list)
+      if (event.key === 'Enter' && task.length !== 0) { 
+        addTask()     
+      }
     }
-  }
-  function sendCheck(par : number, e: any){
-    setChecked([...checked, par])
-    console.log(e)
+  function removeTask(id: number){
+    const newList = listTask.filter(task => task.id !== id)
+    setListTask(newList)
   }
 
-  return (
-    <>
-      <h1>TODO</h1> <button className={night ? 'night' : 'sun'} onClick={toggle} >  </button>
-      <div className="todo">
-        <button></button>
-        <input type="text"
-          name="todo-input"
-          placeholder='Criar'
-          onChange={(e) => doTask(e.target.value)}
-          onKeyDown={handleKeyPress}
-        />
-      </div>
-      <div className="result">
-        <ul>
-          { Object.keys(list).map((valor, key) => {
-            return (
-                <li key={key} draggable={true}>
+  function toggleChecked(id: number, checked:boolean){
+    const index = listTask.findIndex(task => task.id === id)
+    const newList = listTask
+    newList[index].checked = !checked
+    setListTask([...newList])
+  } 
+
+    return (
+      <>
+        <h1>TODO</h1> <button className={night ? 'night' : 'sun'} onClick={toggle} >  </button>
+        <div className="todo">
+          <button></button>
+          <input type="text"
+            value={task}
+            name="todo-input"
+            placeholder='Criar'
+            onChange={(e) => setTask(e.target.value)}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
+        <div className="result">
+          <ul>
+            {listTask.map((task) => {
+              return (
+                <li key={task.id} draggable={true}>
                   <label htmlFor="list">
-                    <input type="checkbox"/>
-                    <span> {  key + " " + valor } </span>
-                  </label> 
+                    <input type="checkbox" checked={task.checked} onChange={()=> console.log('bundinha')}/>
+                    <span> {task.task} </span>
+                    <button onClick={()=>toggleChecked(task.id, task.checked)}>Check</button>
+                    <button onClick={()=>removeTask(task.id)}>Trash</button>
+                  </label>
                 </li>
-            )
-          })}
-        </ul>
-      </div>
-      <div className="base">
-        <span>{ list.length }</span> 
-        <button>All</button> 
-        <button>Active</button>
-        <button>Completed</button>   <button>Clear Completed</button>
-      </div>
-    </>
-  )
+              )
+            })}
+          </ul>
+        </div>
+        <div className="base">
+          <span>{task.length}</span>
+          <button>All</button>
+          <button>Active</button>
+          <button>Completed</button>   <button>Clear Completed</button>
+        </div>
+      </>
+    )
 }
+
 
 export default App
