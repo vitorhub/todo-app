@@ -7,12 +7,13 @@ function App() {
     setNight(!night)
   }
 
-  interface IToggleChecked {
-    id: number;
-    checked: boolean;
-  }
-
+  const [ geral, setGeral ] = useState("ALL")
   const [task , setTask] = useState("")
+  const [exibe, setExibe] = useState([{
+    id: 33,
+    task: "fazer bolo",
+    checked: true
+  }])
   const [listTask, setListTask] = useState([
     {
       id: 1,
@@ -28,16 +29,20 @@ function App() {
         checked: false
     }
     setListTask([...listTask, newTask])
+    setExibe([...listTask, newTask])
     setTask("");
   }
+
   function handleKeyPress(event: { key: any }) {
       if (event.key === 'Enter' && task.length !== 0) { 
         addTask()     
       }
-    }
+  }
+
   function removeTask(id: number){
     const newList = listTask.filter(task => task.id !== id)
     setListTask(newList)
+    setExibe(newList)
   }
 
   function toggleChecked(id: number, checked:boolean){
@@ -45,7 +50,18 @@ function App() {
     const newList = listTask
     newList[index].checked = !checked
     setListTask([...newList])
-  } 
+    setExibe([...newList])
+  }
+  
+
+  function clearCompleted(){
+    console.log(exibe)
+    setGeral("CLEAR COMPLETED")
+    if(geral==="CLEAR COMPLETED"){
+      setExibe([])
+    }
+  }
+
 
     return (
       <>
@@ -60,15 +76,16 @@ function App() {
             onKeyDown={handleKeyPress}
           />
         </div>
+
         <div className="result">
           <ul>
-            {listTask.map((task) => {
+            { exibe.map((task) => {
               return (
-                <li key={task.id} draggable={true}>
+                <li key={task.task} draggable={true}>
                   <label htmlFor="list">
-                    <input type="checkbox" checked={task.checked} onChange={()=> console.log('bundinha')}/>
-                    <span> {task.task} </span>
-                    <button onClick={()=>toggleChecked(task.id, task.checked)}>Check</button>
+                    <input type="checkbox" checked={task.checked}
+                    onChange={()=> toggleChecked(task.id, task.checked)}/>
+                    <span onClick={()=>toggleChecked(task.id, task.checked)}> {task.task} </span>
                     <button onClick={()=>removeTask(task.id)}>Trash</button>
                   </label>
                 </li>
@@ -80,7 +97,7 @@ function App() {
           <span>{task.length}</span>
           <button>All</button>
           <button>Active</button>
-          <button>Completed</button>   <button>Clear Completed</button>
+          <button>Completed</button>   <button onClick={()=> clearCompleted() }>Clear Completed</button>
         </div>
       </>
     )
