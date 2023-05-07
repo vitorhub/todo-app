@@ -51,15 +51,15 @@ function App() {
     newList[index].checked = !checked
     setListTask([...newList])
     setExibe([...newList])
+    console.log(listTask)
   }
-  
 
   function clearCompleted(){
-    console.log(exibe)
-    setGeral("CLEAR COMPLETED")
-    if(geral==="CLEAR COMPLETED"){
       setExibe([])
-    }
+      setListTask([])
+  }
+  function completed(){
+    console.log("completed")
   }
 
 
@@ -97,7 +97,8 @@ function App() {
           <span>{task.length}</span>
           <button>All</button>
           <button>Active</button>
-          <button>Completed</button>   <button onClick={()=> clearCompleted() }>Clear Completed</button>
+          <button onClick={()=> completed() }>Completed</button>
+          <button onClick={()=> clearCompleted() }>Clear Completed</button>
         </div>
       </>
     )
