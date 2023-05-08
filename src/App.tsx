@@ -1,14 +1,15 @@
 import { useContext, useState } from 'react'
 import './App.css'
 
+import {Cross} from './components/styles'
+
 function App() {
   const [night, setNight] = useState(false)
   function toggle() {
     setNight(!night)
   }
 
-  const [ geral, setGeral ] = useState("ALL")
-  const [task , setTask] = useState("")
+  const [task, setTask] = useState("")
   const [exibe, setExibe] = useState([{
     id: 33,
     task: "fazer bolo",
@@ -20,13 +21,13 @@ function App() {
       task: "fazer bolo",
       checked: true
     }
-])
+  ])
 
   function addTask() {
     const newTask = {
-        id: Math.random(),
-        task: task,
-        checked: false
+      id: Math.random(),
+      task: task,
+      checked: false
     }
     setListTask([...listTask, newTask])
     setExibe([...listTask, newTask])
@@ -34,74 +35,88 @@ function App() {
   }
 
   function handleKeyPress(event: { key: any }) {
-      if (event.key === 'Enter' && task.length !== 0) { 
-        addTask()     
-      }
+    if (event.key === 'Enter' && task.length !== 0) {
+      addTask()
+    }
   }
 
-  function removeTask(id: number){
+  function removeTask(id: number) {
     const newList = listTask.filter(task => task.id !== id)
     setListTask(newList)
     setExibe(newList)
   }
 
-  function toggleChecked(id: number, checked:boolean){
+  function toggleChecked(id: number, checked: boolean) {
     const index = listTask.findIndex(task => task.id === id)
     const newList = listTask
     newList[index].checked = !checked
     setListTask([...newList])
     setExibe([...newList])
-    console.log(listTask)
+    // console.log(listTask)
   }
 
-  function clearCompleted(){
-      setExibe([])
-      setListTask([])
+  function clearCompleted() {
+    const marcado = listTask.filter(task => task.checked === false)
+    setExibe([...marcado])
+    setListTask([...marcado])
+    // console.log(exibe)
   }
-  function completed(){
-    console.log("completed")
+  function completed() {
+    const marcado = listTask.filter(task => task.checked === true)
+    console.log(marcado)
+    if (marcado.length > 0) {
+      setExibe([...marcado])
+    }
+  }
+  function active() {
+    const marcado = listTask.filter(task => task.checked === false)
+    setExibe([...marcado])
+  }
+  function all() {
+    setExibe([...listTask])
   }
 
+  return (
+    <>
+      <h1>TODO</h1> <button className={night ? 'night' : 'sun'} onClick={toggle} >  </button>
+      <div className="todo">
+        <button></button>
+        <input type="text"
+          value={task}
+          name="todo-input"
+          placeholder='Criar'
+          onChange={(e) => setTask(e.target.value)}
+          onKeyDown={handleKeyPress}
+        />
+      </div>
 
-    return (
-      <>
-        <h1>TODO</h1> <button className={night ? 'night' : 'sun'} onClick={toggle} >  </button>
-        <div className="todo">
-          <button></button>
-          <input type="text"
-            value={task}
-            name="todo-input"
-            placeholder='Criar'
-            onChange={(e) => setTask(e.target.value)}
-            onKeyDown={handleKeyPress}
-          />
-        </div>
-
-        <div className="result">
-          <ul>
-            { exibe.map((task) => {
-              return (
-                <li key={task.task} draggable={true}>
-                  <label htmlFor="list">
-                    <input type="checkbox" checked={task.checked}
-                    onChange={()=> toggleChecked(task.id, task.checked)}/>
-                    <span onClick={()=>toggleChecked(task.id, task.checked)}> {task.task} </span>
-                    <button onClick={()=>removeTask(task.id)}>Trash</button>
-                  </label>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-        <div className="base">
-          <span>{task.length}</span>
-          <button>All</button>
-          <button>Active</button>
-          <button onClick={()=> completed() }>Completed</button>
-          <button onClick={()=> clearCompleted() }>Clear Completed</button>
-        </div>
-      </>
-    )
+      <div>
+        <ul>
+          {exibe.map((task) => {
+            return (
+              <li key={task.id} draggable={true}>
+                <label htmlFor="list">
+                  <input type="checkbox" checked={task.checked}
+                    onChange={() => toggleChecked(task.id, task.checked)} />
+                  <span onClick={() => toggleChecked(task.id, task.checked)}> {task.task} </span>
+                  <Cross onClick={() => removeTask(task.id)}>
+                    
+                  </Cross>
+                </label>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      <div className="base">
+        <span>{listTask.length}</span>
+        <button onClick={() => all()}>All</button>
+        <button onClick={() => active()}>Active</button>
+        <button onClick={() => completed()}>Completed</button>
+        <button onClick={() => clearCompleted()}>Clear Completed</button>
+      </div>
+    </>
+  )
 }
 
 
