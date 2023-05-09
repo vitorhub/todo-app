@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import './App.css'
 
-import {Cross} from './components/styles'
+import {Cross , Label, ImputCheck } from './components/styles'
 
 function App() {
   const [night, setNight] = useState(false)
@@ -70,7 +70,9 @@ function App() {
   }
   function active() {
     const marcado = listTask.filter(task => task.checked === false)
-    setExibe([...marcado])
+    if(marcado.length > 0){
+      setExibe([...marcado])
+    }
   }
   function all() {
     setExibe([...listTask])
@@ -80,7 +82,7 @@ function App() {
     <>
       <h1>TODO</h1> <button className={night ? 'night' : 'sun'} onClick={toggle} >  </button>
       <div className="todo">
-        <button></button>
+        <button>aki</button>
         <input type="text"
           value={task}
           name="todo-input"
@@ -95,14 +97,14 @@ function App() {
           {exibe.map((task) => {
             return (
               <li key={task.id} draggable={true}>
-                <label htmlFor="list">
-                  <input type="checkbox" checked={task.checked}
+                <Label htmlFor="list">
+                  <ImputCheck id='x' type="checkbox" checked={task.checked}
                     onChange={() => toggleChecked(task.id, task.checked)} />
+                    <label htmlFor="x"></label>
                   <span onClick={() => toggleChecked(task.id, task.checked)}> {task.task} </span>
                   <Cross onClick={() => removeTask(task.id)}>
-                    
                   </Cross>
-                </label>
+                </Label>
               </li>
             )
           })}
