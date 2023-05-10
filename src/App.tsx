@@ -1,27 +1,27 @@
 import { useContext, useState } from 'react'
-import './App.css'
+// import './App.css'
 
-import {Cross , Label, ImputCheck } from './components/styles'
+import {
+  Cross, Label, ImputCheck, InputFalse, Container, Entrada,
+  BotaoToggle, TodoList, TituloToggle, ImputEntrada, ListaMap,
+  Estados, Contador
+} from './components/styles'
 
 function App() {
-  const [night, setNight] = useState(false)
+  const [night, setNight] = useState(true)
   function toggle() {
     setNight(!night)
   }
 
+  interface ITask{
+    id: number;
+    task: string;
+    checked: boolean;
+  }
+
   const [task, setTask] = useState("")
-  const [exibe, setExibe] = useState([{
-    id: 33,
-    task: "fazer bolo",
-    checked: true
-  }])
-  const [listTask, setListTask] = useState([
-    {
-      id: 1,
-      task: "fazer bolo",
-      checked: true
-    }
-  ])
+  const [exibe, setExibe] = useState<any>([])
+  const [listTask, setListTask] = useState<any>([])
 
   function addTask() {
     const newTask = {
@@ -41,36 +41,34 @@ function App() {
   }
 
   function removeTask(id: number) {
-    const newList = listTask.filter(task => task.id !== id)
+    const newList = listTask.filter( (task : ITask) => task.id !== id)
     setListTask(newList)
     setExibe(newList)
   }
 
   function toggleChecked(id: number, checked: boolean) {
-    const index = listTask.findIndex(task => task.id === id)
+    const index = listTask.findIndex((task : ITask) => task.id === id)
     const newList = listTask
     newList[index].checked = !checked
     setListTask([...newList])
     setExibe([...newList])
-    // console.log(listTask)
   }
 
   function clearCompleted() {
-    const marcado = listTask.filter(task => task.checked === false)
+    const marcado = listTask.filter( (task: ITask) => task.checked === false)
     setExibe([...marcado])
     setListTask([...marcado])
-    // console.log(exibe)
   }
   function completed() {
-    const marcado = listTask.filter(task => task.checked === true)
+    const marcado = listTask.filter( (task: ITask) => task.checked === true)
     console.log(marcado)
     if (marcado.length > 0) {
       setExibe([...marcado])
     }
   }
   function active() {
-    const marcado = listTask.filter(task => task.checked === false)
-    if(marcado.length > 0){
+    const marcado = listTask.filter( (task: ITask) => task.checked === false)
+    if (marcado.length > 0) {
       setExibe([...marcado])
     }
   }
@@ -80,43 +78,57 @@ function App() {
 
   return (
     <>
-      <h1>TODO</h1> <button className={night ? 'night' : 'sun'} onClick={toggle} >  </button>
-      <div className="todo">
-        <button>aki</button>
-        <input type="text"
-          value={task}
-          name="todo-input"
-          placeholder='Criar'
-          onChange={(e) => setTask(e.target.value)}
-          onKeyDown={handleKeyPress}
-        />
-      </div>
+      <Container>
+        <TodoList>
+          <TituloToggle>
+            <h1>TODO</h1>
+            <BotaoToggle className={night ? 'night' : 'sun'}
+              toggle={night ? 'night' : 'sun'}
+              onClick={toggle} >
+            </BotaoToggle>
+          </TituloToggle>
 
-      <div>
-        <ul>
-          {exibe.map((task) => {
-            return (
-              <li key={task.id} draggable={true}>
-                <Label htmlFor="list">
-                  <ImputCheck id='x' type="checkbox" checked={task.checked}
-                    onChange={() => toggleChecked(task.id, task.checked)} />
-                    <label htmlFor="x"></label>
-                  <span onClick={() => toggleChecked(task.id, task.checked)}> {task.task} </span>
-                  <Cross onClick={() => removeTask(task.id)}>
-                  </Cross>
-                </Label>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-      <div className="base">
-        <span>{listTask.length}</span>
-        <button onClick={() => all()}>All</button>
-        <button onClick={() => active()}>Active</button>
-        <button onClick={() => completed()}>Completed</button>
-        <button onClick={() => clearCompleted()}>Clear Completed</button>
-      </div>
+          <Entrada>
+            <InputFalse type="checkbox" name="nulo" id="y" defaultChecked={false}/>
+            <label htmlFor="y"></label>
+            <ImputEntrada type="text"
+              value={task}
+              name="todo-input"
+              placeholder='Create a new todo...'
+              onChange={(e) => setTask(e.target.value)}
+              onKeyDown={handleKeyPress}
+            />
+          </Entrada>
+
+
+          <ListaMap>
+            <ul>
+              {exibe.map((task: ITask ) => {
+                return (
+                  <li key={task.id} draggable={true}>
+                    <Label htmlFor="list">
+                      <ImputCheck id='x' type="checkbox" checked={task.checked}
+                        
+                        onChange={() => toggleChecked(task.id, task.checked)} />
+                      <label htmlFor="x"></label>{/* importante checkbox */}
+                      <span onClick={() => toggleChecked(task.id, task.checked)}> {task.task} </span>
+                      <Cross onClick={() => removeTask(task.id)}>
+                      </Cross>
+                    </Label>
+                  </li>
+                )
+              })}
+            </ul>
+          </ListaMap>
+          <Estados>
+            <Contador>{listTask.length} Items left</Contador>
+            <button onClick={() => all()}>All</button>
+            <button onClick={() => active()}>Active</button>
+            <button onClick={() => completed()}>Completed</button>
+            <button onClick={() => clearCompleted()}>Clear Completed</button>
+          </Estados>
+        </TodoList>
+      </Container>
     </>
   )
 }
