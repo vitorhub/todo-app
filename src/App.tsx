@@ -13,7 +13,7 @@ function App() {
     setNight(!night)
   }
 
-  interface ITask{
+  interface ITask {
     id: number;
     task: string;
     checked: boolean;
@@ -41,13 +41,13 @@ function App() {
   }
 
   function removeTask(id: number) {
-    const newList = listTask.filter( (task : ITask) => task.id !== id)
+    const newList = listTask.filter((task: ITask) => task.id !== id)
     setListTask(newList)
     setExibe(newList)
   }
 
   function toggleChecked(id: number, checked: boolean) {
-    const index = listTask.findIndex((task : ITask) => task.id === id)
+    const index = listTask.findIndex((task: ITask) => task.id === id)
     const newList = listTask
     newList[index].checked = !checked
     setListTask([...newList])
@@ -55,19 +55,19 @@ function App() {
   }
 
   function clearCompleted() {
-    const marcado = listTask.filter( (task: ITask) => task.checked === false)
+    const marcado = listTask.filter((task: ITask) => task.checked === false)
     setExibe([...marcado])
     setListTask([...marcado])
   }
   function completed() {
-    const marcado = listTask.filter( (task: ITask) => task.checked === true)
+    const marcado = listTask.filter((task: ITask) => task.checked === true)
     console.log(marcado)
     if (marcado.length > 0) {
       setExibe([...marcado])
     }
   }
   function active() {
-    const marcado = listTask.filter( (task: ITask) => task.checked === false)
+    const marcado = listTask.filter((task: ITask) => task.checked === false)
     if (marcado.length > 0) {
       setExibe([...marcado])
     }
@@ -78,20 +78,20 @@ function App() {
 
   return (
     <>
-      <Container>
+      <Container change={night}>
         <TodoList>
           <TituloToggle>
             <h1>TODO</h1>
-            <BotaoToggle className={night ? 'night' : 'sun'}
+            <BotaoToggle
               toggle={night ? 'night' : 'sun'}
               onClick={toggle} >
             </BotaoToggle>
           </TituloToggle>
 
-          <Entrada>
-            <InputFalse type="checkbox" name="nulo" id="y" defaultChecked={false}/>
+          <Entrada change={night}>
+            <InputFalse change={night} type="checkbox" name="nulo" id="y" defaultChecked={false} />
             <label htmlFor="y"></label>
-            <ImputEntrada type="text"
+            <ImputEntrada change={night} type="text"
               value={task}
               name="todo-input"
               placeholder='Create a new todo...'
@@ -101,17 +101,20 @@ function App() {
           </Entrada>
 
 
-          <ListaMap>
+          <ListaMap change={night}>
             <ul>
-              {exibe.map((task: ITask ) => {
+              {exibe.map((task: ITask) => {
                 return (
                   <li key={task.id} draggable={true}>
-                    <Label htmlFor="list">
-                      <ImputCheck id='x' type="checkbox" checked={task.checked}
-                        
+                    <Label linha={task.checked} change={night} htmlFor="list">
+                      <ImputCheck change={night} id='x' type="checkbox" checked={task.checked}
+
                         onChange={() => toggleChecked(task.id, task.checked)} />
                       <label htmlFor="x"></label>{/* importante checkbox */}
-                      <span onClick={() => toggleChecked(task.id, task.checked)}> {task.task} </span>
+                      <span 
+                        onClick={() => toggleChecked(task.id, task.checked)}>
+                        {task.task}
+                      </span>
                       <Cross onClick={() => removeTask(task.id)}>
                       </Cross>
                     </Label>
@@ -120,8 +123,8 @@ function App() {
               })}
             </ul>
           </ListaMap>
-          <Estados>
-            <Contador>{listTask.length} Items left</Contador>
+          <Estados change={night}>
+            <Contador change={night}>{listTask.length} Items left</Contador>
             <button onClick={() => all()}>All</button>
             <button onClick={() => active()}>Active</button>
             <button onClick={() => completed()}>Completed</button>
